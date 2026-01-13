@@ -57,6 +57,7 @@ def add_awgn(signal, snr_db):
 
 
 rrc_filter = root_raised_cosine(time, Ts, beta)
+rrc_filter = rrc_filter / np.sqrt(np.sum(rrc_filter ** 2))
 
 tx = np.convolve(unsampled, rrc_filter)
 tx = tx.astype(complex)
@@ -93,7 +94,6 @@ print("Detected symbols after correction:", np.sign(np.real(samples_after)))
 
 def plot_eye(signal, sps, title="Eye Diagram"):
     eye_len = 2 * sps
-    plt.figure(figsize = (8, 4))
 
     for i in range(40):
         start = i * sps
@@ -115,31 +115,12 @@ plt.grid(True)
 tx_time = np.arange(len(tx)) / sps
 tx_time_noisy = np.arange(len(tx_with_noise)) / sps
 
-plt.figure(figsize = (6, 4))
+plt.figure(figsize = (10, 4))
 plt.plot(tx_time, tx)
 plt.title("Transmit Signal")
 plt.xlabel("Time")
 plt.ylabel("Amplitude")
 plt.grid(True)
-
-# plt.subplot(2, 1, 2)
-# plt.plot(tx_time_noisy, tx_with_noise)
-# plt.title("Transmit Signal with Noise")
-# plt.xlabel("Time")
-# plt.ylabel("Amplitude")
-# plt.grid(True)
-#
-#
-# y_time = np.arange(len(y)) / sps
-#
-# plt.figure(figsize = (10, 4))
-# plt.plot(y_time, y)
-# plt.stem(sample_indices / sps, samples, linefmt='r-', markerfmt='ro', basefmt=' ', label="Samples")
-# plt.title("Matched filter Output and Samples")
-# plt.xlabel("Time")
-# plt.ylabel("Amplitude")
-# plt.grid(True)
-
 
 plt.figure(figsize=(10, 4))
 plt.plot(np.real(tx), label="Tx (No Offset)")
@@ -149,19 +130,23 @@ plt.legend()
 plt.grid(True)
 
 # Constellation BEFORE correction
-plt.figure()
+plt.figure(figsize = (10, 4))
+plt.subplot(1, 2, 1)
 plt.plot(np.real(samples_before), np.imag(samples_before), 'o')
 plt.title("Constellation BEFORE Frequency Correction")
 plt.grid(True)
 
 # Constellation AFTER correction
-plt.figure()
+plt.subplot(1, 2, 2)
 plt.plot(np.real(samples_after), np.imag(samples_after), 'o')
 plt.title("Constellation AFTER Frequency Correction")
 plt.grid(True)
 
 # Eye diagrams
+plt.figure(figsize = (10, 10))
+plt.subplot(2, 1, 1)
 plot_eye(y, sps, "Eye Diagram BEFORE Frequency Correction")
+plt.subplot(2, 1, 2)
 plot_eye(y_corrected, sps, "Eye Diagram AFTER Frequency Correction")
 
 plt.show()
