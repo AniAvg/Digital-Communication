@@ -79,20 +79,45 @@ print("Samples:  ", samples)
 print("Detected: ", detected)
 
 
-def plot_eye(signal, sps, num_symbols=100, offset=0, title="Eye Diagram"):
+# def plot_eye(signal, sps, num_symbols=100, offset=0, title="Eye Diagram"):
+#     eye_len = 2 * sps
+#     plt.figure(figsize = (8, 4))
+#
+#     for i in range(num_symbols):
+#         start = i * sps + offset
+#         if start + eye_len < len(signal):
+#             segment = signal[start:start + eye_len]
+#             plt.plot(segment, color = 'blue', alpha = 0.2)
+#
+#     plt.title(title)
+#     plt.xlabel("Samples")
+#     plt.ylabel("Amplitude")
+#     plt.grid(True)
+
+def plot_eye(signal, sps, num_symbols=50, offset=0, title="Eye Diagram"):
     eye_len = 2 * sps
-    plt.figure(figsize = (8, 4))
+    half = eye_len // 2
 
-    for i in range(num_symbols):
-        start = i * sps + offset
-        if start + eye_len < len(signal):
-            segment = signal[start:start + eye_len]
-            plt.plot(segment, color = 'blue', alpha = 0.2)
+    t_eye = np.arange(-half, half) / sps
 
-    plt.title(title)
-    plt.xlabel("Samples")
+    plt.figure(figsize=(8, 4))
+
+    max_k = (len(signal) - half - offset) // sps
+    num_segments = min(num_symbols, max_k)
+    for k in range(num_segments):
+        center = offset + k * sps
+        if center - half >= 0 and center + half < len(signal):
+            segment = signal[center - half : center + half]
+            plt.plot(t_eye, segment, color='blue', alpha=0.25)
+
+    plt.xlim([-1, 1])
+    plt.xlabel("Time (symbol periods)")
     plt.ylabel("Amplitude")
+    plt.title(title)
     plt.grid(True)
+
+
+
 
 
 plt.figure(figsize = (10, 4))
@@ -131,9 +156,16 @@ plt.xlabel("Time")
 plt.ylabel("Amplitude")
 plt.grid(True)
 
-plot_eye(y, sps, num_symbols=50, offset=delay, title="Eye Diagram (Matched Filter Output)")
-plot_eye(tx, sps, num_symbols=50, title="Eye Diagram (Transmit Signal)")
-plot_eye(tx_with_noise, sps, num_symbols=50, title="Eye Diagram (Transmit Signal with Noise)")
+
+##
+plot_eye(tx, sps, num_symbols=50, offset=delay, title="Eye Diagram (Transmit Signal)")
+plot_eye(tx_with_noise, sps, num_symbols=50, offset=delay, title="Eye Diagram (Transmit Signal with Noise)")
+plot_eye(y, sps,  num_symbols=50, offset=total_delay, title="Eye Diagram (Matched Filter Output)")
+
+
+# plot_eye(y, sps, num_symbols=50, offset=delay, title="Eye Diagram (Matched Filter Output)")
+# plot_eye(tx, sps, num_symbols=50, title="Eye Diagram (Transmit Signal)")
+# plot_eye(tx_with_noise, sps, num_symbols=50, title="Eye Diagram (Transmit Signal with Noise)")
 
 plt.tight_layout()
 plt.show()
