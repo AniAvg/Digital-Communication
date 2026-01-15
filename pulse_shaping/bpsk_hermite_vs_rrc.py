@@ -84,9 +84,6 @@ print("Original Symbols: ", symbols)
 print("RRC Detected:     ", detected_rrc)
 print("Hermite Detected: ", detected_herm)
 
-
-
-
 plt.figure(figsize=(12, 4))
 plt.plot(time, rrc_filter, label="RRC Pulse")
 plt.plot(time, herm_filter, label="Hermite Pulse")
@@ -95,7 +92,7 @@ plt.xlabel("Time")
 plt.ylabel("Amplitude")
 plt.grid(True)
 plt.legend()
-plt.show()
+
 
 
 plt.figure(figsize=(12, 6))
@@ -117,7 +114,6 @@ plt.ylabel("Amplitude")
 plt.grid(True)
 plt.legend()
 plt.tight_layout()
-plt.show()
 
 plt.figure(figsize=(12,4))
 plt.plot(np.arange(len(y_rrc))/sps, y_rrc, label="RRC MF Output")
