@@ -13,8 +13,8 @@ symbols = 2 * bits - 1
 
 time = np.arange(-span/2, span/2 + 1/sps, 1/sps)
 
-unsampled = np.zeros(len(symbols) * sps)
-unsampled[::sps] = symbols
+upsampled = np.zeros(len(symbols) * sps)
+upsampled[::sps] = symbols
 
 
 def root_raised_cosine(t, Ts, beta):
@@ -59,7 +59,7 @@ def add_awgn(signal, snr_db):
 rrc_filter = root_raised_cosine(time, Ts, beta)
 rrc_filter = rrc_filter / np.sqrt(np.sum(rrc_filter ** 2))
 
-tx = np.convolve(unsampled, rrc_filter)
+tx = np.convolve(upsampled, rrc_filter)
 tx = tx.astype(complex)
 
 # adding freq offset

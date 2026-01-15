@@ -10,10 +10,10 @@ Ts = 1
 snr_db = 5
 
 bits = np.random.randint(0, 2, num_bits)
-symbols = 2 * bits -1
+symbols = 2 * bits - 1
 
-unsampled = np.zeros(len(symbols) * sps)
-unsampled[::sps] = symbols
+upsampled = np.zeros(len(symbols) * sps)
+upsampled[::sps] = symbols
 
 time = np.arange(-span / 2, span / 2 + 1 / sps, 1 / sps)
 
@@ -40,7 +40,7 @@ def root_raised_cosine(t, Ts, beta):
             rrc[i] = (1/Ts) * numerator / denominator
     return rrc
 
-def hermite_pule(t, order=0, Ts=1):
+def hermite_pulse(t, order=0, Ts=1):
     t_scaled = t / Ts
     Hn = hermite(order)
     pulse = Hn(t_scaled) * np.exp(-t_scaled ** 2 / 2)
@@ -55,10 +55,10 @@ def add_awgn(signal, snr_db):
     return signal + noise
 
 rrc_filter = root_raised_cosine(time, Ts, beta)
-herm_filter = hermite_pule(time, order=0, Ts=Ts)
+herm_filter = hermite_pulse(time, order=0, Ts=Ts)
 
-tx_rrc = np.convolve(unsampled, rrc_filter)
-tx_herm = np.convolve(unsampled, herm_filter)
+tx_rrc = np.convolve(upsampled, rrc_filter)
+tx_herm = np.convolve(upsampled, herm_filter)
 
 tx_rrc_noisy = add_awgn(tx_rrc, snr_db)
 tx_herm_noisy = add_awgn(tx_herm, snr_db)
@@ -92,8 +92,6 @@ plt.xlabel("Time")
 plt.ylabel("Amplitude")
 plt.grid(True)
 plt.legend()
-
-
 
 plt.figure(figsize=(12, 6))
 plt.subplot(2,1,1)
