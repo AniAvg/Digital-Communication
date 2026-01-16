@@ -56,6 +56,10 @@ def add_awgn(signal, snr_db):
 
 rrc_filter = root_raised_cosine(time, Ts, beta)
 herm_filter = hermite_pulse(time, order=0, Ts=Ts)
+# herm_filter = hermite_pulse(time, order=6, Ts=Ts)
+# herm_filter = hermite_pulse(time, order=8, Ts=Ts)
+# herm_filter = hermite_pulse(time, order=25, Ts=Ts)
+
 
 tx_rrc = np.convolve(upsampled, rrc_filter)
 tx_herm = np.convolve(upsampled, herm_filter)
