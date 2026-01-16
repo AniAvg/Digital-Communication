@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 from scipy.special import erfc
-from functions import *
+from utils import *
 
 num_bits = 5000
 sps = 8
@@ -8,12 +8,6 @@ beta = 0.35
 span = 18
 Ts = 1
 snr_db = np.arange(-2, 11, 1)
-
-# bits = np.random.randint(0, 2, num_bits)
-# symbols = 2 * bits - 1
-
-# upsampled = np.zeros(len(symbols)  * sps)
-# upsampled[::sps] = symbols
 
 time = np.arange(-span/2, span/2 + 1/sps, 1/sps)
 
@@ -36,7 +30,7 @@ def simulate_ber(pulse):
         upsampled[::sps] = symbols
 
         tx = np.convolve(upsampled, pulse)
-        tx_noisy = add_awgn(tx, snr)#, sps)
+        tx_noisy = add_awgn(tx, snr)
 
         matched_filter = pulse[::-1]
         rx = np.convolve(tx_noisy, matched_filter)
