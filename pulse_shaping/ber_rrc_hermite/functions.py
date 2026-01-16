@@ -31,11 +31,8 @@ def hermite_pulse(t, order=0, Ts=1):
     pulse /= np.sqrt(np.sum(pulse ** 2))
     return pulse
 
-def add_awgn(signal, snr_db, sps):
+def add_awgn(signal, snr_db):
     snr_lin = 10 ** (snr_db / 10)
-    # power = np.mean(signal ** 2)
-    noise_var = 1 / (2 * snr_lin * sps)
-    # noise_power = power / snr_lin
+    noise_var = 1 / (2 * snr_lin)
     noise = np.sqrt(noise_var) * np.random.randn(*signal.shape)
-    # noise = np.sqrt(noise_power) * np.random.randn(*signal.shape)
     return signal + noise
